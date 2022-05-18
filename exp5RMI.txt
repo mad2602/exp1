@@ -1,0 +1,109 @@
+//Client Side
+//PallindromeInterface.java
+import  java.rmi.Remote;
+ import  java.rmi.RemoteException;
+
+public  interface  PallindromeInterface  extends  Remote{
+
+      public  boolean  checkPallindrome(String  str)  throws  RemoteException;
+
+ 
+}
+//PallindromeClient.java
+
+import  java.rmi.*;
+import  java.util.Scanner;
+ 
+public class PallindromeClient {
+   public  static  void  main  (String[]  args)  {
+
+   PallindromeInterface  stub;
+   Scanner sc = new Scanner(System.in);
+   try {
+       stub = (PallindromeInterface)Naming.lookup("rmi://localhost/abc");
+ 
+System.out.println("Enter  string  to  check  pallindrome:");
+
+String s = sc.next();
+boolean  result=stub.checkPallindrome(s);
+if(result) {
+System.out.println("String  is  Pallindrome  Sequence");
+ 
+}
+else{
+
+}
+ 
+
+
+System.out.println("Not  a  Pallindrome");
+ 
+
+}catch (Exception e) { System.out.println("HelloClient  exception:"+e);
+}
+}
+}
+ 
+Server Side
+
+import  java.rmi.Remote;
+ 
+
+
+PallindromeInterface.java
+ 
+import  java.rmi.RemoteException;
+
+public  interface  PallindromeInterface  extends  Remote{
+public  boolean  checkPallindrome(String  str)  throws  RemoteException;
+}
+
+Pallindrome.java
+import  java.rmi.RemoteException;
+import  java.rmi.server.UnicastRemoteObject;
+
+public class Pallindrome extends UnicastRemoteObject implements
+PallindromeInterface  {
+
+protected  Pallindrome()  throws  RemoteException  {
+super();
+}
+
+public  boolean  checkPallindrome(String  s)  { String reverse = "";
+int length = s.length();
+for(int  i  =  length-1;  i  >=  0;  i--  ) reverse  =  reverse  +  s.charAt(i);
+
+if(s.equals(reverse))
+ return  true;
+else
+return  false;
+}
+}
+
+ 
+//PallindromeServer.java
+ 
+
+import  java.rmi.Naming;
+ public class PallindromeServer {
+
+  public  static  void  main  (String[]  argv)  {
+  try {
+Pallindrome  skeleton  =  new  Pallindrome();
+
+ Naming.rebind("rmi://localhost/abc",  skeleton);
+System.out.println("Server  is  ready...");
+}catch  (Exception  e)  {
+System.out.println("Server  failed  to  start...:
+ 
+
+
+
+
+" + e);
+ 
+
+}
+}
+
+}
